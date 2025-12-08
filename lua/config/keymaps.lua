@@ -14,6 +14,8 @@ vim.keymap.set("n", "<leader><space>", function()
   require("fzf-lua").files()
 end, { desc = "Find Files (fzf-lua, show dotfiles)" })
 
+vim.keymap.set("n", "<leader>ft", ":NewTwig<CR>", { desc = "Create new Twig-SCSS file pair for pages and components" })
+
 vim.keymap.set("n", "<leader>cc", function()
   local file = vim.fn.expand("%")
   local output = vim.fn.expand("%:r") .. ".out"
