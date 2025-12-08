@@ -5,6 +5,10 @@ local opts = { noremap = true, silent = true }
 
 vim.keymap.set("i", "jk", "<Esc>", opts)
 vim.keymap.set("n", "s", "vc")
+vim.keymap.set("v", "s", "c")
+-- replacing doesn't yank replaced text
+vim.keymap.set("x", "p", '"_dP')
+vim.keymap.set("v", "p", '"_dP')
 
 vim.keymap.set("n", "<leader><space>", function()
   require("fzf-lua").files()

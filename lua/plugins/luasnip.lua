@@ -18,11 +18,37 @@ local fmt = require("luasnip.extras.fmt").fmt
 
 ls.add_snippets("twig", {
   s(
+    { trig = "js", name = "include js url" },
+    fmt([[{{% js '{}' %}}{}]], {
+      i(1),
+      i(0),
+    })
+  ),
+
+  s(
     { trig = "svg", name = "render svg element" },
     fmt([[{{{{ svg('@webroot/assets/svg/{}.svg') }}}}{}]], {
       i(1),
       i(0),
     })
+  ),
+
+  s(
+    { trig = "splide", name = "inserts the basic splide structure" },
+    fmt(
+      [[
+<section class="splide {}-splide" aria-label="Basic Structure Example">
+  <div class="splide__track">
+    <ul class="splide__list">
+      <li class="splide__slide">Slide 01</li>
+    </ul>
+  </div>
+</section>
+    ]],
+      {
+        i(1),
+      }
+    )
   ),
   s(
     { trig = "s", name = "add a section with proper a11y" },
@@ -42,6 +68,13 @@ ls.add_snippets("twig", {
 })
 
 ls.add_snippets("scss", {
+  s(
+    { trig = "remm", name = "inserts a - rem function" },
+    fmt([[u.remm({}){}]], {
+      i(1),
+      i(0),
+    })
+  ),
   s(
     { trig = "rem", name = "inserts a rem function" },
     fmt([[u.rem({}){}]], {
@@ -64,6 +97,19 @@ ls.add_snippets("scss", {
       [[@use '../variables' as v;
 @use '../utils' as u;]],
       {}
+    )
+  ),
+
+  s(
+    { trig = "mqm", name = "inserts a media query" },
+    fmt(
+      [[@include u.min-media(v.${}) {{ 
+  {}
+}}]],
+      {
+        i(1),
+        i(0),
+      }
     )
   ),
 
