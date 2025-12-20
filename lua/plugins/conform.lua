@@ -26,7 +26,14 @@ return {
           command = "djlint",
           args = function()
             -- reformat from stdin
-            return { "--reformat", "--profile", "nunjucks", "-" }
+            return {
+              "--blank-line-after-tag",
+              "extends",
+              "--reformat",
+              "--profile",
+              "nunjucks",
+              "-",
+            }
           end,
           stdin = true, -- important!
         },

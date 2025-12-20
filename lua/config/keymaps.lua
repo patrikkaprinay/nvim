@@ -10,11 +10,11 @@ vim.keymap.set("v", "s", "c")
 vim.keymap.set("x", "p", '"_dP')
 vim.keymap.set("v", "p", '"_dP')
 
-vim.keymap.set("n", "<leader><space>", function()
-  require("fzf-lua").files()
-end, { desc = "Find Files (fzf-lua, show dotfiles)" })
+-- vim.keymap.set("n", "<leader><space>", function()
+--   require("fzf-lua").files()
+-- end, { desc = "Find Files (fzf-lua, show dotfiles)" })
 
-vim.keymap.set("n", "<leader>ft", ":NewTwig<CR>", { desc = "Create new Twig-SCSS file pair for pages and components" })
+vim.keymap.set("n", "<leader>ft", ":NewTwig<CR>", { desc = "New Twig-SCSS file pair" })
 
 vim.keymap.set("n", "<leader>cc", function()
   local file = vim.fn.expand("%")

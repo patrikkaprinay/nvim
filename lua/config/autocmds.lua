@@ -12,3 +12,20 @@ vim.api.nvim_create_autocmd("InsertLeave", {
   pattern = "*",
   command = "set nopaste",
 })
+--
+-- vim.api.nvim_create_autocmd({ "FileType", "ModeChanged" }, {
+--   callback = function()
+--     if vim.bo.filetype == "snacks_picker_input" then
+--       vim.opt.guicursor = "a:block"
+--     end
+--   end,
+-- })
+--
+-- vim.api.nvim_create_autocmd("BufLeave", {
+--   pattern = "*",
+--   callback = function()
+--     if vim.bo.filetype == "snacks_picker_input" then
+--       vim.opt.guicursor = "n-v-c:block,i:ver25,r-cr:hor20,o:hor50"
+--     end
+--   end,
+-- })

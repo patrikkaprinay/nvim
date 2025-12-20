@@ -18,11 +18,6 @@ return {
             "typescriptreact",
             "twig",
           },
-          init_options = {
-            jsx = {
-              -- optional
-            },
-          },
         },
 
         -- cssls = {

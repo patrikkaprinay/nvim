@@ -85,12 +85,48 @@ vim.api.nvim_create_user_command("NewTwig", function()
         lines[i] = line:gsub("##filename##", filename_for_template):gsub("##date##", date)
       end
       vim.api.nvim_buf_set_lines(0, 0, 0, false, lines)
-      vim.cmd("write") -- save immediately
     end
   end
+
   -- Create SCSS file for both pages and components
   if vim.fn.filereadable(scss_path) == 0 then
-    vim.fn.writefile({ "/* " .. filename_for_template .. ".scss */" }, scss_path)
+    -- Path to global SCSS template
+    local scss_template = vim.fn.stdpath("config") .. "/templates/template.scss"
+    local scss_lines = {}
+
+    if kind == "page" then
+      if vim.fn.filereadable(scss_template) == 1 then
+        -- Read template
+        scss_lines = vim.fn.readfile(scss_template)
+        -- Replace ##filename## with actual filename
+        for i, line in ipairs(scss_lines) do
+          scss_lines[i] = line:gsub("##filename##", filename_for_template)
+        end
+      else
+        -- Fallback: minimal SCSS if template not found
+        scss_lines = {
+          "/* " .. filename_for_template .. ".scss */",
+          "",
+          "main." .. filename_for_template .. " {",
+          "}",
+          "",
+        }
+      end
+    else
+      -- Inline SCSS template for components
+      scss_lines = {
+        "/* " .. filename_for_template .. ".scss */",
+        '@use "../variables" as v;',
+        '@use "../utils" as u;',
+        "",
+        "section." .. filename_for_template .. " {",
+        "}",
+        "",
+      }
+    end
+
+    -- Write new SCSS file
+    vim.fn.writefile(scss_lines, scss_path)
     vim.notify("SCSS file created: " .. scss_path)
   end
 

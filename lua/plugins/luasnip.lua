@@ -18,6 +18,13 @@ local fmt = require("luasnip.extras.fmt").fmt
 
 ls.add_snippets("twig", {
   s(
+    { trig = "tt", name = "include translate string" },
+    fmt([[{{{{ "{}"|t }}}}{}]], {
+      i(1),
+      i(0),
+    })
+  ),
+  s(
     { trig = "js", name = "include js url" },
     fmt([[{{% js '{}' %}}{}]], {
       i(1),
@@ -68,6 +75,75 @@ ls.add_snippets("twig", {
 })
 
 ls.add_snippets("scss", {
+  s({ trig = "black", name = "inserts the v.$c-black color" }, fmt([[v.$c-black]], {})),
+  s({ trig = "white", name = "inserts the v.$c-white color" }, fmt([[v.$c-white]], {})),
+  s({ trig = "primary", name = "inserts the v.$c-primary color" }, fmt([[v.$c-primary]], {})),
+  s(
+    { trig = "t1", name = "inserts a t1 font template" },
+    fmt([[@include v.t1();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "t2", name = "inserts a t2 font template" },
+    fmt([[@include v.t2();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "h1", name = "inserts a h1 font template" },
+    fmt([[@include v.h1();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "h2", name = "inserts a h2 font template" },
+    fmt([[@include v.h2();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "h3", name = "inserts a h3 font template" },
+    fmt([[@include v.h3();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "h4", name = "inserts a h4 font template" },
+    fmt([[@include v.h4();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "h5", name = "inserts a h5 font template" },
+    fmt([[@include v.h5();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "b1", name = "inserts a b1 font template" },
+    fmt([[@include v.b1();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "b2", name = "inserts a b2 font template" },
+    fmt([[@include v.b2();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "d", name = "inserts a d font template" },
+    fmt([[@include v.d();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "trans", name = "inserts a tranisition helper function" },
+    fmt([[@include u.transition();{}]], {
+      i(0),
+    })
+  ),
   s(
     { trig = "remm", name = "inserts a - rem function" },
     fmt([[u.remm({}){}]], {
