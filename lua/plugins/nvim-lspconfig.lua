@@ -13,7 +13,6 @@ return {
           filetypes = {
             "html",
             "css",
-            "javascript",
             "javascriptreact",
             "typescriptreact",
             "twig",

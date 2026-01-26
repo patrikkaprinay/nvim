@@ -7,13 +7,14 @@ return {
   { "bluz71/vim-nightfly-colors" },
   { "NLKNguyen/papercolor-theme" },
   { "romainl/Apprentice" },
+  { "EdenEast/nightfox.nvim" },
 
   -- Configure LazyVim to load colorscheme
   {
     "LazyVim/LazyVim",
     opts = {
       -- colorscheme = "kanagawa-wave",
-      colorscheme = "nightfly",
+      colorscheme = "carbonfox",
     },
   },
 }

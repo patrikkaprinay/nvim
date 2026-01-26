@@ -18,6 +18,13 @@ local fmt = require("luasnip.extras.fmt").fmt
 
 ls.add_snippets("twig", {
   s(
+    { trig = "expires", name = "expires tag" },
+    fmt([[{{% expires in {} %}}{}]], {
+      i(1),
+      i(0),
+    })
+  ),
+  s(
     { trig = "tt", name = "include translate string" },
     fmt([[{{{{ "{}"|t }}}}{}]], {
       i(1),
