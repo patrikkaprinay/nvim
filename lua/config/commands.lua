@@ -27,17 +27,19 @@ end, { desc = "Insert Twig template into current buffer" })
 
 vim.api.nvim_create_user_command("NewTwig", function()
   -- Ask what type of file
-  local kind = vim.fn.input("Create (page/component)? [p/c]: ")
+  local kind = vim.fn.input("Create (page/component/entry-partial)? [p/c/e]: ")
   kind = kind:lower()
 
   if kind == "p" then
     kind = "page"
   elseif kind == "c" then
     kind = "component"
+  elseif kind == "e" then
+    kind = "entry-partial"
   end
 
-  if kind ~= "page" and kind ~= "component" then
-    vim.notify("Invalid type. Must be 'page' (p) or 'component' (c).", vim.log.levels.ERROR)
+  if kind ~= "page" and kind ~= "component" and kind ~= "entry-partial" then
+    vim.notify("Invalid type. Must be 'page' (p), 'component' (c), or 'entry-partial' (e).", vim.log.levels.ERROR)
     return
   end
 
@@ -56,10 +58,12 @@ vim.api.nvim_create_user_command("NewTwig", function()
   if kind == "page" then
     twig_path = cwd .. "/templates/_pages/" .. filename_input .. ".twig"
     scss_path = cwd .. "/web/assets/css/_pages/_" .. filename_input .. ".scss"
-  else
-    -- Components: underscore prefix
+  elseif kind == "component" then
     twig_path = cwd .. "/templates/_components/_" .. filename_input .. ".twig"
     scss_path = cwd .. "/web/assets/css/_components/_" .. filename_input .. ".scss"
+  elseif kind == "entry-partial" then
+    twig_path = cwd .. "/templates/_partials/entry/" .. filename_input .. ".twig"
+    scss_path = cwd .. "/web/assets/css/_partials/entry/_" .. filename_input .. ".scss"
   end
 
   -- Make sure directories exist
@@ -92,6 +96,7 @@ vim.api.nvim_create_user_command("NewTwig", function()
   if vim.fn.filereadable(scss_path) == 0 then
     -- Path to global SCSS template
     local scss_template = vim.fn.stdpath("config") .. "/templates/template.scss"
+    local scss_template_component = vim.fn.stdpath("config") .. "/templates/component.scss"
     local scss_lines = {}
 
     if kind == "page" then
@@ -112,17 +117,40 @@ vim.api.nvim_create_user_command("NewTwig", function()
           "",
         }
       end
+    elseif kind == "component" then
+      -- Components: use file-based template (same as pages)
+      if vim.fn.filereadable(scss_template_component) == 1 then
+        scss_lines = vim.fn.readfile(scss_template_component)
+        for i, line in ipairs(scss_lines) do
+          scss_lines[i] = line:gsub("##filename##", filename_for_template)
+        end
+      else
+        -- Fallback: minimal SCSS if template not found
+        scss_lines = {
+          "/* " .. filename_for_template .. ".scss */",
+          "",
+          "section." .. filename_for_template .. " {",
+          "}",
+          "",
+        }
+      end
     else
-      -- Inline SCSS template for components
-      scss_lines = {
-        "/* " .. filename_for_template .. ".scss */",
-        '@use "../variables" as v;',
-        '@use "../utils" as u;',
-        "",
-        "section." .. filename_for_template .. " {",
-        "}",
-        "",
-      }
+      -- Entry partial: use a dedicated template or fallback
+      local scss_template_entry = vim.fn.stdpath("config") .. "/templates/entry-partial.scss"
+      if vim.fn.filereadable(scss_template_entry) == 1 then
+        scss_lines = vim.fn.readfile(scss_template_entry)
+        for i, line in ipairs(scss_lines) do
+          scss_lines[i] = line:gsub("##filename##", filename_for_template)
+        end
+      else
+        scss_lines = {
+          "/* _" .. filename_for_template .. ".scss */",
+          "",
+          " section." .. filename_for_template .. " {",
+          "}",
+          "",
+        }
+      end
     end
 
     -- Write new SCSS file
@@ -137,8 +165,10 @@ vim.api.nvim_create_user_command("NewTwig", function()
     local section_found = false
     if kind == "page" then
       import_path = "_pages/_" .. filename_for_template
-    else
+    elseif kind == "component" then
       import_path = "_components/_" .. filename_for_template
+    else
+      import_path = "_partials/entry/_" .. filename_for_template
     end
     local import_line = string.format('@use "%s";', import_path)
 
@@ -160,8 +190,17 @@ vim.api.nvim_create_user_command("NewTwig", function()
           insert_index = i
         elseif kind == "component" and line:match('^@use "_components/') then
           insert_index = i
+        elseif kind == "entry-partial" and line:match('^@use "_partials/entry/') then
+          insert_index = i
         end
       end
+      -- for i, line in ipairs(lines) do
+      --   if kind == "page" and line:match('^@use "_pages/') then
+      --     insert_index = i
+      --   elseif kind == "component" and line:match('^@use "_components/') then
+      --     insert_index = i
+      --   end
+      -- end
 
       -- If no section exists yet, append at the end
       if insert_index == 0 then

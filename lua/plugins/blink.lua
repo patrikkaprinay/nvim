@@ -2,27 +2,37 @@ return {
   "saghen/blink.cmp",
   opts = {
     sources = {
-      -- Define which sources are enabled
-      default = { "lsp", "path", "snippets", "buffer" },
-
+      default = { "datastar", "snippets", "lsp", "path", "buffer" },
       providers = {
-        buffer = {
-          -- 1. Setup the buffer source to look at all loaded buffers
-          -- This is crucial. By default, it often only looks at the current buffer.
-          opts = {
-            get_bufnrs = function()
-              return vim.tbl_filter(function(bufnr)
-                return vim.api.nvim_buf_is_loaded(bufnr)
-              end, vim.api.nvim_list_bufs())
-            end,
-          },
-
-          -- 2. Optimization: Only trigger this aggressive scanning when typing
-          -- This keeps performance high.
-          min_keyword_length = 3,
+        datastar = {
+          name = "datastar",
+          module = "datastar.cmp_source",
+          score_offset = 100, -- prioritize Datastar completions
         },
+        -- snippets = {
+        --   score_offset = 5,
+        --   transform_items = function(_, items)
+        --     local trigger_prefixes = { "s" }
+        --     for _, item in ipairs(items) do
+        --       local label = item.label or ""
+        --       for _, prefix in ipairs(trigger_prefixes) do
+        --         if label:match("^" .. prefix) then
+        --           item.score_offset = (item.score_offset or 0) + 15
+        --           break
+        --         end
+        --       end
+        --     end
+        --     return items
+        --   end,
+        -- },
       },
     },
+
+    fuzzy = {
+      use_frecency = true, -- Enable frecency-based sorting
+      use_proximity = true, -- Boost items closer to cursor
+    },
+
     keymap = {
       preset = "super-tab",
       ["<Tab>"] = {

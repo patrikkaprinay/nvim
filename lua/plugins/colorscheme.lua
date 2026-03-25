@@ -7,7 +7,11 @@ return {
   { "bluz71/vim-nightfly-colors" },
   { "NLKNguyen/papercolor-theme" },
   { "romainl/Apprentice" },
-  { "EdenEast/nightfox.nvim" },
+  { "EdenEast/nightfox.nvim", opts = {
+    options = {
+      transparent = true,
+    },
+  } },
 
   -- Configure LazyVim to load colorscheme
   {

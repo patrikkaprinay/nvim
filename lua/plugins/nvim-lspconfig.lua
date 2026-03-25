@@ -3,6 +3,24 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        intelephense = {
+          settings = {
+            intelephense = {
+              files = {
+                maxSize = 5000000,
+              },
+              format = {
+                enable = false,
+              },
+              environment = {
+                includePaths = {
+                  "vendor/craftcms/cms/src",
+                },
+              },
+            },
+          },
+        },
+        phpactor = { enabled = false },
         twiggy_language_server = {
           enabled = true,
         },

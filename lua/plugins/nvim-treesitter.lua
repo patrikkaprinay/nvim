@@ -7,10 +7,12 @@ return {
     },
     ensure_installed = {
       "svelte",
-      "twiggy_language_server",
+      "twig",
       "php",
       "twig",
       "html",
+      "css",
+      "c",
     },
   },
 }

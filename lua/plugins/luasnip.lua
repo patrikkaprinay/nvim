@@ -2,6 +2,9 @@ local ls = require("luasnip")
 local s = ls.snippet
 local t = ls.text_node
 local i = ls.insert_node
+local f = ls.function_node
+local sn = ls.snippet_node
+local d = ls.dynamic_node
 local fmt = require("luasnip.extras.fmt").fmt
 
 -- vim.keymap.set({ "i", "s" }, "<A-k>", function()
@@ -18,6 +21,32 @@ local fmt = require("luasnip.extras.fmt").fmt
 
 ls.add_snippets("twig", {
   s(
+    { trig = "image", name = "adds an image with srcset and sizes" },
+    fmt(
+      [[{{% set image = {} %}}
+{{% if image %}}
+<img src="{{{{ image.url("w640") }}}}"
+      srcset="{{{{ image.getSrcset(["400w", "600w", "800w", "1100w", "1440w", "1920w"]) }}}}"
+      sizes="{}"
+      loading="lazy"
+      width="{{{{ image.getWidth() }}}}"
+      height="{{{{ image.getHeight() }}}}"
+      alt="{{{{ image.alt }}}}">
+{{% endif %}}{}]],
+      {
+        i(1, "entry.image.withTransforms(['w640', '400w', '600w', '800w', '1100w', '1440w', '1920w']).one()"),
+        i(2),
+        i(0),
+      }
+    )
+  ),
+  s(
+    { trig = "bzz", name = "adds a bzzz into a form" },
+    fmt([[<input type="hidden" name="bzzz" value="{{{{ craft.app.security.generateRandomString(32) }}}}">{}]], {
+      i(0),
+    })
+  ),
+  s(
     { trig = "expires", name = "expires tag" },
     fmt([[{{% expires in {} %}}{}]], {
       i(1),
@@ -25,11 +54,38 @@ ls.add_snippets("twig", {
     })
   ),
   s(
+    { trig = "iff", name = "include translate string" },
+    fmt(
+      [[{{% if {} %}}
+{{{{ {} }}}}
+{{% endif %}}
+{}]],
+      {
+        i(1),
+        f(function(args)
+          return args[1]
+        end, { 1 }), -- mirrors class for id
+        i(0),
+      }
+    )
+  ),
+  s(
     { trig = "tt", name = "include translate string" },
     fmt([[{{{{ "{}"|t }}}}{}]], {
       i(1),
       i(0),
     })
+  ),
+  s(
+    { trig = "jsb", name = "include js block" },
+    fmt(
+      [[{{% js %}}
+{}
+{{% endjs %}}]],
+      {
+        i(0),
+      }
+    )
   ),
   s(
     { trig = "js", name = "include js url" },
@@ -41,7 +97,7 @@ ls.add_snippets("twig", {
 
   s(
     { trig = "svg", name = "render svg element" },
-    fmt([[{{{{ svg('@webroot/assets/svg/{}.svg') }}}}{}]], {
+    fmt([[{{{{ svg('@webroot/assets/svg/{}.svg')|attr({{"aria-hidden":"true", "focusable":"false"}}) }}}}{}]], {
       i(1),
       i(0),
     })
@@ -65,23 +121,45 @@ ls.add_snippets("twig", {
     )
   ),
   s(
-    { trig = "s", name = "add a section with proper a11y" },
+    { trig = "s", name = "section with heading" },
     fmt(
       [[
-        <section class="{}" aria-labelledby="{}-title">
-          {}
-        </section>
-      ]],
+      <section class="{}" aria-labelledby="{}-title">
+          <{} id="{}-title">{{{{ {} }}}}</{}>
+      </section>
+    ]],
       {
-        i(1),
-        i(1),
-        i(1),
+        i(1), -- class with default selected
+        f(function(args)
+          return args[1]
+        end, { 1 }), -- mirrors class for id
+        d(2, function()
+          -- safely compute heading level
+          local level = 2
+          return sn(nil, { t("h" .. level) })
+        end, {}),
+        f(function(args)
+          return args[1]
+        end, { 1 }), -- mirrors class for id
+        --
+        -- contents below
+        --
+        d(3, function(args)
+          -- args[1][1] = class name from i(1)
+          local default_text = '"' .. (args[1][1] or "") .. '"|t'
+          return sn(nil, { i(1, default_text) })
+        end, { 1 }),
+        --
+        f(function(args)
+          return args[1]
+        end, { 2 }), -- closing tag mirrors dynamic node
       }
     )
   ),
 })
 
-ls.add_snippets("scss", {
+local styles_snippets = {
+
   s({ trig = "black", name = "inserts the v.$c-black color" }, fmt([[v.$c-black]], {})),
   s({ trig = "white", name = "inserts the v.$c-white color" }, fmt([[v.$c-white]], {})),
   s({ trig = "primary", name = "inserts the v.$c-primary color" }, fmt([[v.$c-primary]], {})),
@@ -166,6 +244,13 @@ ls.add_snippets("scss", {
     })
   ),
 
+  s(
+    { trig = "grta", name = "grid template areas" },
+    fmt([[grid-template-areas: "--{}";{}]], {
+      i(1),
+      i(0),
+    })
+  ),
   s(
     { trig = "grtc", name = "grid template columns" },
     fmt([[grid-template-columns: {};{}]], {
@@ -265,47 +350,6 @@ grid-template-columns: {};{}]],
       { i(1), i(0) }
     )
   ),
-})
-
-ls.add_snippets("scss", {
-  s(
-    { trig = "dfc", name = "display flex center" },
-    fmt(
-      [[display: flex;
-flex-direction: column;
-gap: u.rem({});{}]],
-      {
-        i(1),
-        i(0),
-      }
-    )
-  ),
-})
-
--- ls.add_snippets("scss", {
---   s("pt", {
---     t("padding-inline: "),
---     i(1),
---     t(";"),
---   }),
--- })
--- ls.add_snippets("scss", {
---   s("px", {
---     t("padding-inline: "),
---     i(1),
---     t(";"),
---   }),
--- })
--- ls.add_snippets("scss", {
---   s("py", {
---     t("padding-block: "),
---     i(1),
---     t(";"),
---   }),
--- })
-
-ls.add_snippets("scss", {
-
   -- PADDING (logical) ---------------------------------------------------
 
   s("p", {
@@ -411,7 +455,22 @@ ls.add_snippets("scss", {
     t(";"),
     i(0),
   }),
-})
+  s(
+    { trig = "dfc", name = "display flex center" },
+    fmt(
+      [[display: flex;
+flex-direction: column;
+gap: u.rem({});{}]],
+      {
+        i(1),
+        i(0),
+      }
+    )
+  ),
+}
+
+ls.add_snippets("scss", styles_snippets)
+ls.add_snippets("css", styles_snippets)
 
 return {
   "L3MON4D3/LuaSnip",

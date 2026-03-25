@@ -12,3 +12,7 @@ vim.opt.backupcopy = "yes"
 vim.opt.inccommand = "split"
 vim.opt.undofile = true
 -- vim.opt.iskeyword:append("-")
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.expandtab = true

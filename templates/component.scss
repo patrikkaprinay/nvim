@@ -2,7 +2,5 @@
 @use "../_lib/variables" as v;
 @use "../_lib/utils" as u;
 
-main.##filename## {
-    section.landing {
-    }
+section.##filename## {
 }

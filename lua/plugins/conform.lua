@@ -3,7 +3,10 @@ return {
   {
     "stevearc/conform.nvim",
     opts = {
+      keep_backup = false,
       formatters_by_ft = {
+        dotenv = {},
+        sh = {},
         html = { "prettier" },
         javascript = { "prettier" },
         css = { "prettier" },
@@ -13,9 +16,13 @@ return {
         typescript = { "prettier" },
         typescriptreact = { "prettier" },
         twig = { "djlint" },
+        php = {},
+        c = { "clang-format" },
       },
       formatters = {
-
+        prettier = {
+          prepend_args = { "--tab-width", "4", "--no-use-tabs" },
+        },
         twig_cs_fixer = {
           command = "twig-cs-fixer",
           args = { "lint", "--fix", "." },
@@ -27,9 +34,11 @@ return {
           args = function()
             -- reformat from stdin
             return {
-              "--blank-line-after-tag",
-              "extends",
               "--reformat",
+              "--blank-line-after-tag",
+              "extends,include",
+              "--blank-line-before-tag",
+              "include",
               "--profile",
               "nunjucks",
               "-",
