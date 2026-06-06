@@ -3,6 +3,32 @@ return {
     "neovim/nvim-lspconfig",
     opts = {
       servers = {
+        sourcekit = {
+          cmd = { "xcrun", "sourcekit-lsp" },
+          filetypes = { "swift", "objective-c", "objective-cpp" },
+          root_markers = {
+            "buildServer.json",
+            "Package.swift",
+            "*.xcodeproj",
+            "*.xcworkspace",
+            "compile_commands.json",
+            ".sourcekit-lsp",
+            ".git",
+          },
+          capabilities = {
+            workspace = {
+              didChangeWatchedFiles = {
+                dynamicRegistration = true,
+              },
+            },
+            textDocument = {
+              diagnostic = {
+                dynamicRegistration = true,
+                relatedDocumentSupport = true,
+              },
+            },
+          },
+        },
         intelephense = {
           settings = {
             intelephense = {
@@ -23,6 +49,14 @@ return {
         phpactor = { enabled = false },
         twiggy_language_server = {
           enabled = true,
+          settings = {
+            twiggy = {
+              diagnostics = {
+                twigCsFixer = true,
+              },
+              framework = "craft",
+            },
+          },
         },
         html = {
           filetypes = { "html", "twig" },
@@ -34,6 +68,9 @@ return {
             "javascriptreact",
             "typescriptreact",
             "twig",
+          },
+          init_options = {
+            showAbbreviationSuggestions = false,
           },
         },
 

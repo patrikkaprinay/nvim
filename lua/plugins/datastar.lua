@@ -1,5 +1,5 @@
 return {
   "WillEhrendreich/datastar.nvim",
-  ft = "twig",
+  ft = { "twig" },
   opts = {},
 }

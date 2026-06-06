@@ -29,3 +29,14 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 --     end
 --   end,
 -- })
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "html", "twig" },
+  callback = function(event)
+    vim.keymap.set("v", "<leader>ce", function()
+      require("nvim-emmet").wrap_with_abbreviation()
+      vim.schedule(function()
+        vim.cmd("normal! gv=")
+      end)
+    end, { buffer = event.buf, desc = "Emmet wrap with abbreviation" })
+  end,
+})

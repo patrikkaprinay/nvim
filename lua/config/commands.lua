@@ -56,11 +56,11 @@ vim.api.nvim_create_user_command("NewTwig", function()
   local filename_for_template = filename_input
 
   if kind == "page" then
-    twig_path = cwd .. "/templates/_pages/" .. filename_input .. ".twig"
-    scss_path = cwd .. "/web/assets/css/_pages/_" .. filename_input .. ".scss"
+    twig_path = cwd .. "/templates/pages/" .. filename_input .. ".twig"
+    scss_path = cwd .. "/web/assets/css/pages/_" .. filename_input .. ".scss"
   elseif kind == "component" then
-    twig_path = cwd .. "/templates/_components/_" .. filename_input .. ".twig"
-    scss_path = cwd .. "/web/assets/css/_components/_" .. filename_input .. ".scss"
+    twig_path = cwd .. "/templates/components/_" .. filename_input .. ".twig"
+    scss_path = cwd .. "/web/assets/css/components/_" .. filename_input .. ".scss"
   elseif kind == "entry-partial" then
     twig_path = cwd .. "/templates/_partials/entry/" .. filename_input .. ".twig"
     scss_path = cwd .. "/web/assets/css/_partials/entry/_" .. filename_input .. ".scss"
@@ -164,9 +164,9 @@ vim.api.nvim_create_user_command("NewTwig", function()
     local import_path
     local section_found = false
     if kind == "page" then
-      import_path = "_pages/_" .. filename_for_template
+      import_path = "pages/_" .. filename_for_template
     elseif kind == "component" then
-      import_path = "_components/_" .. filename_for_template
+      import_path = "components/_" .. filename_for_template
     else
       import_path = "_partials/entry/_" .. filename_for_template
     end
@@ -186,9 +186,9 @@ vim.api.nvim_create_user_command("NewTwig", function()
       -- Find the last import in the correct section
       local insert_index = 0
       for i, line in ipairs(lines) do
-        if kind == "page" and line:match('^@use "_pages/') then
+        if kind == "page" and line:match('^@use "pages/') then
           insert_index = i
-        elseif kind == "component" and line:match('^@use "_components/') then
+        elseif kind == "component" and line:match('^@use "components/') then
           insert_index = i
         elseif kind == "entry-partial" and line:match('^@use "_partials/entry/') then
           insert_index = i

@@ -12,6 +12,7 @@ return {
       "twig",
       "html",
       "css",
+      "scss",
       "c",
     },
   },

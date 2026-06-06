@@ -25,6 +25,7 @@ ls.add_snippets("twig", {
     fmt(
       [[{{% set image = {} %}}
 {{% if image %}}
+{{% do image.setTransform({{ format: 'webp', quality: 75 }}) %}}
 <img src="{{{{ image.url("w640") }}}}"
       srcset="{{{{ image.getSrcset(["400w", "600w", "800w", "1100w", "1440w", "1920w"]) }}}}"
       sizes="{}"
@@ -86,6 +87,13 @@ ls.add_snippets("twig", {
         i(0),
       }
     )
+  ),
+  s(
+    { trig = "css", name = "include css url" },
+    fmt([[{{% css '{}' %}}{}]], {
+      i(1),
+      i(0),
+    })
   ),
   s(
     { trig = "js", name = "include js url" },
@@ -159,7 +167,7 @@ ls.add_snippets("twig", {
 })
 
 local styles_snippets = {
-
+  s({ trig = "var", name = "var with -- prefix" }, fmt([[var(--{}){}]], { i(1), i(0) })),
   s({ trig = "black", name = "inserts the v.$c-black color" }, fmt([[v.$c-black]], {})),
   s({ trig = "white", name = "inserts the v.$c-white color" }, fmt([[v.$c-white]], {})),
   s({ trig = "primary", name = "inserts the v.$c-primary color" }, fmt([[v.$c-primary]], {})),
@@ -206,6 +214,12 @@ local styles_snippets = {
     })
   ),
   s(
+    { trig = "h6", name = "inserts a h6 font template" },
+    fmt([[@include v.h6();{}]], {
+      i(0),
+    })
+  ),
+  s(
     { trig = "b1", name = "inserts a b1 font template" },
     fmt([[@include v.b1();{}]], {
       i(0),
@@ -218,10 +232,45 @@ local styles_snippets = {
     })
   ),
   s(
+    { trig = "b3", name = "inserts a b3 font template" },
+    fmt([[@include v.b3();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "b4", name = "inserts a b4 font template" },
+    fmt([[@include v.b4();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "b5", name = "inserts a b5 font template" },
+    fmt([[@include v.b5();{}]], {
+      i(0),
+    })
+  ),
+  s(
+    { trig = "b6", name = "inserts a b6 font template" },
+    fmt([[@include v.b6();{}]], {
+      i(0),
+    })
+  ),
+  s(
     { trig = "d", name = "inserts a d font template" },
     fmt([[@include v.d();{}]], {
       i(0),
     })
+  ),
+  s(
+    { trig = "hover", name = "inserts a hover helper function" },
+    fmt(
+      [[@include u.hover(){{
+    {}
+}}]],
+      {
+        i(0),
+      }
+    )
   ),
   s(
     { trig = "trans", name = "inserts a tranisition helper function" },
@@ -257,6 +306,17 @@ local styles_snippets = {
       i(1),
       i(0),
     })
+  ),
+
+  s(
+    { trig = "center", name = "inserts position absolute centering" },
+    fmt(
+      [[position: absolute;
+top: 50%;
+left: 50%;
+translate: -50% -50%;]],
+      {}
+    )
   ),
 
   s(
@@ -460,9 +520,10 @@ grid-template-columns: {};{}]],
     fmt(
       [[display: flex;
 flex-direction: column;
-gap: u.rem({});{}]],
+gap: u.clamp-builder({}, {});{}]],
       {
         i(1),
+        i(2),
         i(0),
       }
     )
